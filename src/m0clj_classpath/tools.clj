@@ -104,6 +104,6 @@
   (filter #(.endsWith (first %) ".class") (m0clj-resource-search p)))
 
 (defn m0clj-path-to-full-class [p]
-  (.. p (replaceAll "/" ".")))
+  (.. p (replaceAll "/" ".") (replaceAll ".class$" "")))
 
 
