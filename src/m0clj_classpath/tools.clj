@@ -36,6 +36,10 @@
   EntryHandler 
   (entry-name [e] (.getName file)))
 
+(extend-type java.net.URI
+  EntryHandler 
+  (entry-name [e] (println "Unknown entry:" e)))
+
 (defn m0clj-filenames-in-zip [filename]
   (let [z (java.util.zip.ZipFile. filename)] 
     (map #(NewZipEntry. filename %) (enumeration-seq (.entries z)))))
@@ -49,11 +53,15 @@
     (cond
      (not (.exists f)) []
      (.isDirectory f) (m0clj-files-in f)
-     (.endsWith p (str \j \a \r)) (m0clj-filenames-in-zip f)
+     (.endsWith p "jar") (m0clj-filenames-in-zip f)
+     (.endsWith p "zip") (m0clj-filenames-in-zip f)
      :else [uri])))
 
 (defn m0clj-classpath-uris-via-classloader [obj] 
-  (map #(.toURI %) (.. obj getClass getClassLoader getURLs)))
+  (let [cl (.. obj getClass getClassLoader)]
+    (if cl
+       (map #(.toURI %) (. cl getURLs))
+       [])))
 
 (defn m0clj-split-classpath [path]
   (let [sep (java.io.File/pathSeparator)]
@@ -69,7 +77,8 @@
   (set
    (concat 
     (m0clj-classpath-uris-via-classloader clojure-version)
-    (m0clj-classpath-uris-via-system-property "sun.boot.class.path"))))
+    (m0clj-classpath-uris-via-system-property "sun.boot.class.path")
+    (m0clj-classpath-uris-via-system-property "java.class.path"))))
 
 (defn m0clj-resources-map [] 
   (reduce #(update-in %1 [(entry-name %2)] conj %2) {} 
