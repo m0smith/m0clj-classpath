@@ -116,3 +116,9 @@
   (.. p (replaceAll "/" ".") (replaceAll ".class$" "")))
 
 
+(defn m0clj-which [class-name]
+	(let [clazz (Class/forName class-name)
+	      resource-name (str "/" (.replace class-name "." "/") ".class")]
+	(.getResource clazz resource-name)))
+
+
