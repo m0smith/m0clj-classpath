@@ -127,6 +127,6 @@
 
 (defn locations-of [ky]
   (let [loc-seq (get @m0clj-resource-map ky)]
-    (map-indexed #(vector %1 (entry-loc %2)) loc-seq)))
+    (map-indexed #(list %1 (entry-loc %2)) loc-seq)))
 
 
