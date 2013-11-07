@@ -84,7 +84,7 @@
   (reduce #(update-in %1 [(entry-name %2)] conj %2) {} 
           (mapcat m0clj-type-of (m0clj-classpath-uris))))
 
-(defn m0clj-resource-search-camel-case-pattern [pattern]
+(defn camel-case-pattern [pattern]
   (let [any (str \. \*)
         empty-str (str)
         non-upper (str \( \[ \^ \A \- \Z \] \* \) )
@@ -95,8 +95,8 @@
                      (apply str (map #(str (first %1) %2) 
                                      (re-seq (re-pattern upper) pattern) (repeat any )))))))
 
-(defn m0clj-camel-case? [p s]
-  (re-find (m0clj-resource-search-camel-case-pattern p) s))
+(defn camel-case? [p s]
+  (re-find (camel-case-pattern p) s))
 
 (defn m0clj-exclude? [p]
   (not-any? #(re-find % p) @m0clj-excludes))
@@ -107,7 +107,7 @@
 
 (defn m0clj-resource-search [p]
   (filter #(m0clj-exclude? (first %)) 
-          (filter #(m0clj-camel-case? p (first %)) @m0clj-resource-map)))
+          (filter #(camel-case? p (first %)) @m0clj-resource-map)))
 
 (defn m0clj-class-search [p]
   (filter #(.endsWith (first %) ".class") (m0clj-resource-search p)))
@@ -116,9 +116,9 @@
   (.. p (replaceAll "/" ".") (replaceAll ".class$" "")))
 
 
-(defn m0clj-which [class-name]
-	(let [clazz (Class/forName class-name)
-	      resource-name (str "/" (.replace class-name "." "/") ".class")]
-	(.getResource clazz resource-name)))
+(defn which [class-name]
+  (let [clazz (Class/forName class-name)
+        resource-name (str "/" (.replace class-name "." "/") ".class")]
+    (.getResource clazz resource-name)))
 
 
