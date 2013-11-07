@@ -23,18 +23,22 @@
     ]))
 
 (defprotocol EntryHandler
-  (entry-name [entry]))
+  (entry-name [entry])
+  (entry-loc  [entry])
+)
 
 (defrecord FileEntry [base file]
   EntryHandler 
   (entry-name [e] 
     (let [b (.getPath base)
           f (.getPath file)]
-      (.replaceAll (.replaceAll (.replace f b "") "[\\\\]" "/") "^/" ""))))
+      (.replaceAll (.replaceAll (.replace f b "") "[\\\\]" "/") "^/" "")))
+  (entry-loc [e] (vector (str base) (str file))))
 
 (defrecord NewZipEntry [base file]
   EntryHandler 
-  (entry-name [e] (.getName file)))
+  (entry-name [e] (.getName file))
+  (entry-loc [e] (vector (str base) (str file))))
 
 (extend-type java.net.URI
   EntryHandler 
@@ -120,5 +124,9 @@
   (let [clazz (Class/forName class-name)
         resource-name (str "/" (.replace class-name "." "/") ".class")]
     (.getResource clazz resource-name)))
+
+(defn locations-of [ky]
+  (let [loc-seq (get @m0clj-resource-map ky)]
+    (map-indexed #(vector %1 (entry-loc %2)) loc-seq)))
 
 
