@@ -33,12 +33,12 @@
     (let [b (.getPath base)
           f (.getPath file)]
       (.replaceAll (.replaceAll (.replace f b "") "[\\\\]" "/") "^/" "")))
-  (entry-loc [e] (vector (str base) (str file))))
+  (entry-loc [e] (vector "F" (str base) (str file))))
 
 (defrecord NewZipEntry [base file]
   EntryHandler 
   (entry-name [e] (.getName file))
-  (entry-loc [e] (vector (str base) (str file))))
+  (entry-loc [e] (vector "Z" (str base) (str file))))
 
 (extend-type java.net.URI
   EntryHandler 
