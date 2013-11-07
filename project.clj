@@ -1,4 +1,4 @@
-(defproject m0clj-classpath "0.1.4"
+(defproject m0clj-classpath "0.1.5"
   :description "Interact with java classpath from Clojure"
   :url "https://github.com/m0smith/m0clj-classpath"
   :license {:name "Eclipse Public License"
