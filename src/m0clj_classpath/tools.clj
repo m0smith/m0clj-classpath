@@ -1,4 +1,7 @@
 (ns m0clj-classpath.tools
+  (:gen-class
+   :methods [[which [String] String]]
+)
   (:use [clojure.string :only (split)]))
 
 ;;;Search a ZIP file: From http://stackoverflow.com/a/5428265/850252
@@ -124,6 +127,9 @@
   (let [clazz (Class/forName class-name)
         resource-name (str "/" (.replace class-name "." "/") ".class")]
     (.getResource clazz resource-name)))
+
+(defn -which [this class-name]
+  (which class-name))
 
 (defn locations-of [ky]
   (let [loc-seq (get @m0clj-resource-map ky)]
