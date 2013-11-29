@@ -3,4 +3,5 @@
   :url "https://github.com/m0smith/m0clj-classpath"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :aot [m0clj-classpath.tools]
   :dependencies [[org.clojure/clojure "1.5.1"]])
